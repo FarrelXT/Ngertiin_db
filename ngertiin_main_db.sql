@@ -33,6 +33,7 @@ CREATE TABLE Siswa (
     Nama_lengkap VARCHAR(100),
     NISN VARCHAR(20),
     Nomor_telephone VARCHAR(20),
+    Tingkat_diajarkan Enum('SD', 'SMP', 'SMA') NOT NULL,
     -- Tingkat_sekolah VARCHAR(10)/Enum ? NOT NULL,
     Tanggal_Lahir DATE NOT NULL,
     Point INT DEFAULT 0
