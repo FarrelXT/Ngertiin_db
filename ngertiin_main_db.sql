@@ -1,6 +1,15 @@
+-- generalisir tabel user (union : admin, guru, siswa)
+CREATE TABLE User (
+    Id_user INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Email VARCHAR(100) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    Foto_profil VARCHAR(255)
+);
+
 -- Admin Table
 CREATE TABLE Admin (
-    Id_admin INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY
+    Id_admin INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
     FOREIGN KEY (Id_admin) REFERENCES User(Id_user)
 );
 
@@ -15,7 +24,7 @@ CREATE TABLE Guru (
     NIP VARCHAR(20) NOT NULL,
     Mapel_diajarkan VARCHAR(100) NOT NULL, 
     Tingkat_diajarkan ENUM('SD', 'SMP', 'SMA') NOT NULL,
-    Status ENUM('terverifikasi', 'belum terverifikasi') DEFAULT 'belum terverifikasi'
+    Status ENUM('terverifikasi', 'belum terverifikasi') DEFAULT 'belum terverifikasi',
     FOREIGN KEY (Id_guru) REFERENCES User(Id_user)
 );
 
@@ -39,19 +48,7 @@ CREATE TABLE Siswa (
                         '11',
                         '12') NOT NULL,
     Tanggal_Lahir DATE NOT NULL,
-    foreign key (Id_siswa) REFERENCES User(Id_user),
-);
-
--- generalisir tabel user (union : admin, guru, siswa)
-CREATE TABLE User (
-    Id_user INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Username VARCHAR(50) NOT NULL UNIQUE,
-    Email VARCHAR(100) NOT NULL,
-    Password VARCHAR(100) NOT NULL,
-    Foto_profil VARCHAR(255),
-    Jenis_user ENUM('admin',
-                    'guru',
-                    'siswa') NOT NULL
+    foreign key (Id_siswa) REFERENCES User(Id_user)
 );
 
 -- riwayat poin user table
@@ -70,60 +67,8 @@ CREATE TABLE Info (
     Nama_info VARCHAR(100) NOT NULL,
     Isi_info TEXT NOT NULL,
     Tanggal_info DATETIME NOT NULL,
-    Gambar_info VARCHAR(255) NOT NULL,
+    Gambar_info VARCHAR(255) NOT NULL
 );
-
-
--- Leaderboard Table
-CREATE TABLE Leaderboard (
-    Id_leaderboard INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    USERNAME VARCHAR(50) NOT NULL,
-    Nama_leaderboard VARCHAR(50) NOT NULL,
-    Rank_position INT NOT NULL
-);
-
--- Notifikasi Table
-CREATE TABLE Notifikasi (
-    Id_notif INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Username_penerima VARCHAR(50) NOT NULL,
-    Jenis_penerima ENUM('admin',
-                        'guru',
-                        'siswa') NOT NULL,
-    Isi_notif TEXT NOT NULL,
-    Dibaca BOOLEAN DEFAULT FALSE,
-    Waktu_notif DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Grup Table
-CREATE TABLE Grup (
-    Id_grup INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Nama_grup VARCHAR(100) NOT NULL,
-    Deskripsi TEXT,
-    Tanggal_dibuat DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Username_creator VARCHAR(50) NOT NULL,
-    Foto_grup VARCHAR(255)
-);
-
--- AnggotaGrup Table
-CREATE TABLE AnggotaGrup (
-    Id_anggota INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Id_grup INT NOT NULL,
-    Username_anggota VARCHAR(50) NOT NULL,
-    Role ENUM('moderator',
-                'owner',
-                'member') DEFAULT 'member',
-    Tanggal_bergabung DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Id_grup) REFERENCES Grup(Id_grup)
-);
-
--- simpan/archive post user
-CREATE TABLE save_post (
-    Id_user INT NOT NULL,
-    Id_post INT NOT NULL,
-    Waktu_save DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Id_user) REFERENCES User(Id_user),
-    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
-); 
 
 -- Post Table 
 CREATE TABLE Post (
@@ -134,8 +79,8 @@ CREATE TABLE Post (
     foto_file VARCHAR(255),
     Isi_post TEXT NOT NULL,
     Waktu_post DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status_post ENUM('aktif', 'nonaktif', 'Hapus') DEFAULT 'aktif',
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
-    FOREIGN KEY (Id_feedback) REFERENCES feedback(Id_feedback)
 );
 
 
@@ -144,11 +89,6 @@ CREATE TABLE feedback (
     Id_user INT NOT NULL,
     Id_feedback INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Id_post INT NOT NULL,
-    Jenis_feedback ENUM('post',
-                        'komentar',
-                        'report',
-                        'vote') NOT NULL,
-    FOREIGN KEY (Id_user) REFERENCES User(Id_user),
     FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
 );
 
@@ -165,8 +105,7 @@ CREATE TABLE Repost (
 CREATE TABLE Komentar (
     Id_komentar INT PRIMARY KEY NOT NULL,
     Isi_komentar TEXT NOT NULL,
-    Waktu_komentar DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Id_komentar) REFERENCES feedback(Id_feedback),
+    FOREIGN KEY (Id_komentar) REFERENCES feedback(Id_feedback)
 );
 
 -- Vote Table
@@ -174,7 +113,6 @@ CREATE TABLE Vote (
     Id_vote INT PRIMARY KEY NOT NULL,
     downvote INT DEFAULT 0,
     upvote INT DEFAULT 0,
-    Waktu_vote DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (Id_vote) REFERENCES feedback(Id_feedback)
 );
 
@@ -188,11 +126,19 @@ CREATE TABLE Report (
                         'lainnya') NOT NULL,
     Isi_report TEXT NOT NULL,
     Status_report ENUM('sedang ditangani', 'sedang diproses', 'tertangani') DEFAULT 'sedang diproses',
-    Waktu_report_masuk DATETIME DEFAULT CURRENT_TIMESTAMP
+    Waktu_report_masuk DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (Id_report) REFERENCES feedback(Id_feedback)
 );
 --      GENERALISIR FEEDBACK
 
+-- simpan/archive post user
+CREATE TABLE save_post (
+    Id_user INT NOT NULL,
+    Id_post INT NOT NULL,
+    Waktu_save DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user),
+    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
+);
 
 -- anggota report akun
 CREATE TABLE report_akun (
@@ -204,7 +150,7 @@ CREATE TABLE report_akun (
                             'penipuan, HOAX, fraud',
                             'pelanggaran privasi',
                             'pelanggaran hak cipta',
-                            'lainnya') NOT NULL
+                            'lainnya') NOT NULL,
     report_akun_deskripsi TEXT NOT NULL,
     Status_report_akun ENUM('sedang ditangani',
                             'sedang diproses',
@@ -213,10 +159,12 @@ CREATE TABLE report_akun (
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
 
-DELIMITER//
+ALTER TABLE `post` ADD FOREIGN KEY (Id_feedback) REFERENCES feedback(Id_feedback);
+
+DELIMITER //
 CREATE TRIGGER sebelum_update_riwayat_poin BEFORE UPDATE ON riwayat_poin
 FOR EACH ROW
 BEGIN
-    UPDATE riwayat_poin SET poin = poin + NEW.poin 
-    WHERE Id_user = NEW.Id_user;
+    SET NEW.poin = OLD.poin + NEW.poin;
 END//
+DELIMITER ;
