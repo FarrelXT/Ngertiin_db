@@ -1,6 +1,7 @@
 -- Admin Table
 CREATE TABLE Admin (
     Id_admin INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY
+    FOREIGN KEY (Id_admin) REFERENCES User(Id_user)
 );
 
 -- Guru Table
@@ -15,6 +16,7 @@ CREATE TABLE Guru (
     Mapel_diajarkan VARCHAR(100) NOT NULL, 
     Tingkat_diajarkan ENUM('SD', 'SMP', 'SMA') NOT NULL,
     Status ENUM('terverifikasi', 'belum terverifikasi') DEFAULT 'belum terverifikasi'
+    FOREIGN KEY (Id_guru) REFERENCES User(Id_user)
 );
 
 -- Siswa Table
@@ -24,28 +26,39 @@ CREATE TABLE Siswa (
     NISN VARCHAR(20),
     Nomor_telephone VARCHAR(20),
     Tingkat_sekolah ENUM('SD', 'SMP', 'SMA') NOT NULL,
-    kelas_sekolah ENUM('1','2','3','4','5','6','7', '8', '9', '10', '11', '12') NOT NULL,
+    kelas_sekolah ENUM('1',
+                        '2',
+                        '3',
+                        '4',
+                        '5',
+                        '6',
+                        '7',
+                        '8',
+                        '9',
+                        '10',
+                        '11',
+                        '12') NOT NULL,
     Tanggal_Lahir DATE NOT NULL,
+    foreign key (Id_siswa) REFERENCES User(Id_user),
 );
 
--- table generalisir user (union : admin, guru, siswa)
+-- generalisir tabel user (union : admin, guru, siswa)
 CREATE TABLE User (
     Id_user INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     Username VARCHAR(50) NOT NULL UNIQUE,
     Email VARCHAR(100) NOT NULL,
     Password VARCHAR(100) NOT NULL,
     Foto_profil VARCHAR(255),
-    Jenis_user ENUM('admin', 'guru', 'siswa') NOT NULL,
-    foreign key (Id_user) refferences Admin(Id_admin),
-    foreign key (Id_user) refferences Guru(Id_guru),
-    foreign key (Id_user) refferences Siswa(Id_siswa)
+    Jenis_user ENUM('admin',
+                    'guru',
+                    'siswa') NOT NULL
 );
 
 -- riwayat poin user table
 CREATE TABLE riwayat_poin (
-    id_riwayat INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Id_riwayat INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     Id_user INT NOT NULL,
-    poin INT NOT NULL DEF1AULT 0,
+    poin INT NOT NULL DEFAULT 0,
     tanggal_masuk DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
@@ -61,48 +74,6 @@ CREATE TABLE Info (
 );
 
 
--- Post Table 
-CREATE TABLE Post (
-    Id_post INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Username_pembuat VARCHAR(50) NOT NULL,
-    Foto_file VARCHAR(255),
-    Isi_post TEXT NOT NULL,
-    Jumlah_upvote INT DEFAULT 0,
-    Jumlah_downvote INT DEFAULT 0,
-    Waktu_post DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Repost Table
-CREATE TABLE Repost (
-    Id_repost INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Id_post INT NOT NULL,
-    Username_repost VARCHAR(50) NOT NULL,
-    Waktu_repost DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
-);
-
--- Komentar Table
-CREATE TABLE Komentar (
-    Id_komentar INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Id_post INT NOT NULL,
-    Username_komentator VARCHAR(50) NOT NULL,
-    Jenis_komentator ENUM('guru', 'siswa') NOT NULL,
-    Isi_komentar TEXT NOT NULL,
-    Waktu_komentar DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
-);
-
--- Vote Table
-CREATE TABLE Vote (
-    Id_vote INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Id_post INT NOT NULL,
-    Username_voter VARCHAR(50) NOT NULL,
-    Jenis_voter ENUM('guru', 'siswa') NOT NULL,
-    Jenis_vote ENUM('upvote', 'downvote') NOT NULL,
-    FOREIGN KEY (Id_post) REFERENCES Post(Id_post),
-    UNIQUE KEY unique_vote (Id_post, Username_voter, Jenis_voter)
-);
-
 -- Leaderboard Table
 CREATE TABLE Leaderboard (
     Id_leaderboard INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -115,7 +86,9 @@ CREATE TABLE Leaderboard (
 CREATE TABLE Notifikasi (
     Id_notif INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     Username_penerima VARCHAR(50) NOT NULL,
-    Jenis_penerima ENUM('admin', 'guru', 'siswa') NOT NULL,
+    Jenis_penerima ENUM('admin',
+                        'guru',
+                        'siswa') NOT NULL,
     Isi_notif TEXT NOT NULL,
     Dibaca BOOLEAN DEFAULT FALSE,
     Waktu_notif DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -156,25 +129,95 @@ CREATE TABLE AnggotaGrup (
     Id_anggota INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     Id_grup INT NOT NULL,
     Username_anggota VARCHAR(50) NOT NULL,
-    Role ENUM('moderator','owner', 'member') DEFAULT 'member',
+    Role ENUM('moderator',
+                'owner',
+                'member') DEFAULT 'member',
     Tanggal_bergabung DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (Id_grup) REFERENCES Grup(Id_grup)
 );
 
+-- simpan/archive post user
+CREATE TABLE save_post (
+    Id_user INT NOT NULL,
+    Id_post INT NOT NULL,
+    Waktu_save DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user),
+    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
+); 
+
+-- Post Table 
+CREATE TABLE Post (
+    Id_user INT NOT NULL,
+    Id_feedback INT NOT NULL,
+    Id_post INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Username_pembuat VARCHAR(50) NOT NULL,
+    foto_file VARCHAR(255),
+    Isi_post TEXT NOT NULL,
+    Waktu_post DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user)
+    FOREIGN KEY (Id_feedback) REFERENCES feedback(Id_feedback)
+);
+
+
+-- generalisir tabel feedback (union : repost, komentar, report, vote)
+CREATE TABLE feedback (
+    Id_user INT NOT NULL,
+    Id_feedback INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Id_post INT NOT NULL,
+    Jenis_feedback ENUM('post',
+                        'komentar',
+                        'report',
+                        'vote') NOT NULL,
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user),
+    FOREIGN KEY (Id_post) REFERENCES Post(Id_post)
+);
+
+--      GENERALISIR FEEDBACK
+-- Repost Table
+CREATE TABLE Repost (
+    Id_repost INT PRIMARY KEY NOT NULL,
+    Username_repost VARCHAR(50) NOT NULL,
+    Waktu_repost DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_repost) REFERENCES feedback(Id_feedback)
+);
+
+-- Komentar Table
+CREATE TABLE Komentar (
+    Id_komentar INT PRIMARY KEY NOT NULL,
+    Isi_komentar TEXT NOT NULL,
+    Waktu_komentar DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_komentar) REFERENCES feedback(Id_feedback),
+);
+
+-- Vote Table
+CREATE TABLE Vote (
+    Id_vote INT PRIMARY KEY NOT NULL,
+    downvote INT DEFAULT 0,
+    upvote INT DEFAULT 0,
+    Waktu_vote DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Id_vote) REFERENCES feedback(Id_feedback)
+);
+
 -- anggota report
 CREATE TABLE Report (
-    Id_report INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    Username_pelapor VARCHAR(50) NOT NULL, 
-    Jenis_report ENUM('spam', 'bullying', 'konten tidak pantas', 'lainnya') NOT NULL,
+    Id_report INT PRIMARY KEY NOT NULL,
+    Jenis_report ENUM('spam',
+                        'bullying',
+                        'konten tidak pantas',
+                        'Pelanggaran Hak Cipta',
+                        'lainnya') NOT NULL,
     Isi_report TEXT NOT NULL,
     Status_report ENUM('sedang ditangani', 'sedang diproses', 'tertangani') DEFAULT 'sedang diproses',
     Waktu_report_masuk DATETIME DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (Id_report) REFERENCES feedback(Id_feedback)
 );
+--      GENERALISIR FEEDBACK
+
 
 -- anggota report akun
 CREATE TABLE report_akun (
-    id_report_akun INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    id_user INT NOT NULL,
+    Id_report_akun INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Id_user INT NOT NULL,
     Jenis_report_akun ENUM('spam',
                             'akun palsu',
                             'konten berbahaya mengandung SARA dan diluar konteks akademik',
@@ -183,9 +226,11 @@ CREATE TABLE report_akun (
                             'pelanggaran hak cipta',
                             'lainnya') NOT NULL
     report_akun_deskripsi TEXT NOT NULL,
-    Status_report_akun ENUM('sedang ditangani', 'sedang diproses', 'tertangani') DEFAULT 'sedang diproses',
+    Status_report_akun ENUM('sedang ditangani',
+                            'sedang diproses',
+                            'tertangani') DEFAULT 'sedang diproses',
     waktu_report_akun_masuk DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES User(Id_user)
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
 
 -- -- index + trigger exists insert cek report table
