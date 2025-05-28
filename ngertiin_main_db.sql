@@ -94,26 +94,6 @@ CREATE TABLE Notifikasi (
     Waktu_notif DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- -- Pesan Table (BUKAN PRIORITAS)
--- CREATE TABLE Pesan (
---     Id_pesan INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
---     Username_pengirim VARCHAR(50) NOT NULL,
---     Username_penerima VARCHAR(50) NOT NULL,
---     Isi_pesan TEXT NOT NULL,
---     Dibaca BOOLEAN DEFAULT FALSE,
---     Waktu_kirim DATETIME DEFAULT CURRENT_TIMESTAMP
--- );
-
--- -- Pertemanan Table (BUKAN PRIORITAS)
--- CREATE TABLE Pertemanan (
---     Id_pertemanan INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
---     Username1 VARCHAR(50) NOT NULL,
---     Username2 VARCHAR(50) NOT NULL,
---     Status ENUM('pending', 'sukses', 'ditolak') NOT NULL,
---     Tanggal_request DATETIME DEFAULT CURRENT_TIMESTAMP,
---     Tanggal_konfirmasi DATETIME
--- );
-
 -- Grup Table
 CREATE TABLE Grup (
     Id_grup INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -232,35 +212,6 @@ CREATE TABLE report_akun (
     waktu_report_akun_masuk DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
-
--- -- index + trigger exists insert cek report table
--- CREATE INDEX idx_report_konten ON Report(Konten_type, Id_konten);
--- DELIMITER //
--- CREATE TRIGGER sebelum_insert_report BEFORE INSERT ON Report
--- FOR EACH ROW
--- BEGIN
---     DECLARE valdi BOOLEAN DEFAULT FALSE;
-
---     IF NEW.konten_type = 'post' THEN
---         SET valdi = EXISTS(SELECT 1 FROM Post WHERE Id_post = NEW.id_konten);
---     ELSEIF NEW.konten_type = 'komentar' THEN
---         SET valdi = EXISTS(SELECT 1 FROM Komentar WHERE Id_komentar = NEW.id_konten);
---     ELSEIF NEW.konten_type = 'akun' THEN
---         IF NEW.jenis_konten_akun = 'siswa' THEN
---             SET valdi = EXISTS(SELECT 1 FROM Siswa WHERE Id_siswa = NEW.id_konten);
---         ELSEIF NEW.jenis_konten_akun = 'guru' THEN
---             SET valdi = EXISTS(SELECT 1 FROM Guru WHERE Id_guru = NEW.id_konten);
---         END IF;
---     END IF;
-    
---     IF NOT valdi THEN
---         SIGNAL SQLSTATE '45000' 
---         SET MESSAGE_TEXT = 'konten tidak tersedia atau telah dihapus';
---     END IF;
--- END//
--- DELIMITER ;
--- -- end index + trigger exists insert cek report table
--- -- Akhiran Bagian Report
 
 DELIMITER//
 CREATE TRIGGER sebelum_update_riwayat_poin BEFORE UPDATE ON riwayat_poin
