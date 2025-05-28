@@ -4,37 +4,20 @@ CREATE TABLE User (
     Username VARCHAR(50) NOT NULL UNIQUE,
     Email VARCHAR(100) NOT NULL,
     Password VARCHAR(100) NOT NULL,
-    Foto_profil VARCHAR(255)
-);
-
--- Admin Table
-CREATE TABLE Admin (
-    Id_admin INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
-    FOREIGN KEY (Id_admin) REFERENCES User(Id_user)
-);
-
--- Guru Table
-CREATE TABLE Guru (
-    Id_guru INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
+    jenis_user ENUM('admin', 'guru', 'siswa') NOT NULL,
+    Foto_profil VARCHAR(255),
     Nama_Lengkap VARCHAR(100) NOT NULL,
-    Nama_Sekolah VARCHAR(100) NOT NULL,
+    Nama_Sekolah VARCHAR(100),
     Tanggal_Lahir DATE NOT NULL,
     Nomer_Telepon VARCHAR(20) NOT NULL,
-    Domisili VARCHAR(100) NOT NULL,
-    NIP VARCHAR(20) NOT NULL,
-    Mapel_diajarkan VARCHAR(100) NOT NULL, 
-    Tingkat_diajarkan ENUM('SD', 'SMP', 'SMA') NOT NULL,
-    Status ENUM('terverifikasi', 'belum terverifikasi') DEFAULT 'belum terverifikasi',
-    FOREIGN KEY (Id_guru) REFERENCES User(Id_user)
-);
-
--- Siswa Table
-CREATE TABLE Siswa (
-    Id_siswa INT AUTO_INCREMENT UNIQUE NOT NULL,
-    Nama_lengkap VARCHAR(100) NOT NULL,
+    Domisili VARCHAR(100),
+    NIP VARCHAR(20),
+    Mapel_diajarkan VARCHAR(100), 
+    Tingkat_diajarkan ENUM('SD', 'SMP', 'SMA'),
+    Status_guru ENUM('terverifikasi', 'belum terverifikasi') 
+                    DEFAULT 'belum terverifikasi',
     NISN VARCHAR(20),
-    Nomor_telephone VARCHAR(20),
-    Tingkat_sekolah ENUM('SD', 'SMP', 'SMA') NOT NULL,
+    Tingkat_sekolah ENUM('SD', 'SMP', 'SMA'),
     kelas_sekolah ENUM('1',
                         '2',
                         '3',
@@ -46,9 +29,7 @@ CREATE TABLE Siswa (
                         '9',
                         '10',
                         '11',
-                        '12') NOT NULL,
-    Tanggal_Lahir DATE NOT NULL,
-    foreign key (Id_siswa) REFERENCES User(Id_user)
+                        '12')
 );
 
 -- riwayat poin user table
@@ -62,12 +43,13 @@ CREATE TABLE riwayat_poin (
 
 -- Info Table
 CREATE TABLE Info (
-    Id_info INT AUTO_INCREMENT PRIMARY kEY NOT NULL,
-    Id_admin VARCHAR(50) NOT NULL,
+    Id_info INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Id_user INT NOT NULL,
     Nama_info VARCHAR(100) NOT NULL,
     Isi_info TEXT NOT NULL,
     Tanggal_info DATETIME NOT NULL,
-    Gambar_info VARCHAR(255) NOT NULL
+    Gambar_info VARCHAR(255) NOT NULL,
+    FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
 
 -- Post Table 
@@ -82,7 +64,6 @@ CREATE TABLE Post (
     status_post ENUM('aktif', 'nonaktif', 'Hapus') DEFAULT 'aktif',
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
-
 
 -- generalisir tabel feedback (union : repost, komentar, report, vote)
 CREATE TABLE feedback (
@@ -159,7 +140,7 @@ CREATE TABLE report_akun (
     FOREIGN KEY (Id_user) REFERENCES User(Id_user)
 );
 
-ALTER TABLE `post` ADD FOREIGN KEY (Id_feedback) REFERENCES feedback(Id_feedback);
+-- ALTER TABLE `post` ADD FOREIGN KEY (Id_feedback) REFERENCES feedback(Id_feedback);
 
 DELIMITER //
 CREATE TRIGGER sebelum_update_riwayat_poin BEFORE UPDATE ON riwayat_poin
