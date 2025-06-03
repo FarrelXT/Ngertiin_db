@@ -1,4 +1,4 @@
-CREATE TABLE User (
+CREATE TABLE user (
     id_user INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -12,8 +12,7 @@ CREATE TABLE User (
     telpon_guru VARCHAR(20) DEFAULT NULL,
     domisili_guru TEXT DEFAULT NULL,
     nip_guru VARCHAR(18) DEFAULT NULL,
-    status_guru ENUM('aktif', 'nonaktif') DEFAULT NULL,
-    nip_guru VARCHAR(18) DEFAULT NULL,
+    status_guru ENUM('terdaftar' ,'belum terdaftar', 'tidak terdaftar') DEFAULT NULL,
     tingkat_siswa ENUM('SD',
                         'SMP',
                         'SMA') DEFAULT NULL,
@@ -37,13 +36,13 @@ CREATE TABLE info (
     id_info INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     nama_info VARCHAR(100) NOT NULL,
-    gambar_file_info VARCHAR(255) NOT NULL,
+    file_foto_info VARCHAR(255) NOT NULL,
     isi_info TEXT NOT NULL,
     tanggal_info DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE post (
-    `id_post` int NOT NULL,
+    `id_post` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `id_user` int NOT NULL,
     `id_feedback` int NOT NULL,
     `file_foto` varchar(255) NOT NULL,
@@ -56,13 +55,13 @@ CREATE TABLE riwayat (
     id_riwayat INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     point INT NOT NULL DEFAULT 0,
-    `date` DATETIME DEFAULT CURRENT_TIMESTAMP
+    date DATE NOT NULL
 );
 
-CREATE TABLE Save (
+CREATE TABLE save (
     id_save INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
-    id_post INT NOT NULL,
+    id_post INT NOT NULL
 );
 
 CREATE TABLE feedback (
@@ -79,6 +78,24 @@ CREATE TABLE feedback (
   `isi_jawab` text
 );
 
+ALTER TABLE `riwayat`
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
+
+ALTER TABLE `save`     
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
+    ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
+
+ALTER TABLE `info`
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
+
+ALTER TABLE `post`
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
+    ADD FOREIGN KEY (id_feedback) REFERENCES feedback(id_feedback);
+
+ALTER TABLE `feedback`
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
+    ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
+
 DELIMITER //
 CREATE TRIGGER sebelum_update_riwayat_poin BEFORE UPDATE ON riwayat
 FOR EACH ROW
@@ -86,7 +103,3 @@ BEGIN
     SET NEW.point = OLD.point + NEW.point;
 END//
 DELIMITER ;
-
-ALTER TABLE `save`     
-    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
-    ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
