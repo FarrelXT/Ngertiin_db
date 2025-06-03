@@ -11,7 +11,7 @@ CREATE TABLE user (
     tanggal_lahir_guru_siswa DATE DEFAULT NULL,
     telpon_guru VARCHAR(20) DEFAULT NULL,
     domisili_guru TEXT DEFAULT NULL,
-    nip_guru VARCHAR(18) DEFAULT NULL,
+    nip_guru VARCHAR(18) DEFAULT NULL,                                                                                                          
     status_guru ENUM('terdaftar' ,'belum terdaftar', 'tidak terdaftar') DEFAULT NULL,
     tingkat_siswa ENUM('SD',
                         'SMP',
@@ -89,7 +89,8 @@ ALTER TABLE `info`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
 
 ALTER TABLE `post`
-    ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
+    ADD FOREIGN KEY (id_feedback) REFERENCES feedback(id_feedback);
 ALTER TABLE `feedback`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
     ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
