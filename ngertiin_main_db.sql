@@ -86,7 +86,8 @@ ALTER TABLE `save`
     ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
 
 ALTER TABLE `info`
-    ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
+    ADD CONSTRAINT chk_jenis_user CHECK (u.jenis_user);
 
 ALTER TABLE `post`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
@@ -95,10 +96,33 @@ ALTER TABLE `feedback`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
     ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
 
-DELIMITER //
+DELIMITER // -- Trigger update riwayat poin
 CREATE TRIGGER sebelum_update_riwayat_poin BEFORE UPDATE ON riwayat
 FOR EACH ROW
 BEGIN
     SET NEW.point = OLD.point + NEW.point;
+END//
+DELIMITER ;
+
+
+DELIMITER // -- Fungsi cek user adalah admin
+CREATE FUNCTION chck_user_admin(user_id INT) 
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE jns_user VARCHAR(20);
+    DECLARE can_access BOOLEAN DEFAULT FALSE;
+    
+    SELECT jenis_user INTO jns_user 
+    FROM user 
+    WHERE id_user = user_id;
+    
+    IF jns_user = 'admin' THEN
+        SET can_access = TRUE;
+    ELSE
+        SET can_access = FALSE;
+    END IF;
+    
+    RETURN can_access;
 END//
 DELIMITER ;
