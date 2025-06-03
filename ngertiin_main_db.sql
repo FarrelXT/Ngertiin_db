@@ -7,7 +7,7 @@ CREATE TABLE user (
     jenis_user ENUM('siswa', 
                     'guru', 
                     'admin') NOT NULL,
-    nama_lengkap_guru_siswa VARCHAR(100) DEFAULT NOT NULL,
+    nama_lengkap_guru_siswa VARCHAR(100) NOT NULL,
     tanggal_lahir_guru_siswa DATE DEFAULT NULL,
     telpon_guru VARCHAR(20) DEFAULT NULL,
     domisili_guru TEXT DEFAULT NULL,
@@ -42,13 +42,13 @@ CREATE TABLE info (
 );
 
 CREATE TABLE post (
-    `id_post` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `id_user` int NOT NULL,
-    `id_feedback` int NOT NULL,
-    `file_foto` varchar(255) NOT NULL,
-    `isi_post` text NOT NULL,
-    `status` enum('Publik','Privat','Hapus') NOT NULL,
-    `tanggal_post` date NOT NULL
+    id_post int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_user int NOT NULL,
+    id_feedback int NOT NULL,
+    file_foto varchar(255) NOT NULL,
+    isi_post text NOT NULL,
+    status_post enum('Publik','Privat','Hapus') NOT NULL,
+    tanggal_post date NOT NULL
 );
 
 CREATE TABLE riwayat (
@@ -89,9 +89,7 @@ ALTER TABLE `info`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
 
 ALTER TABLE `post`
-    ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
-    ADD FOREIGN KEY (id_feedback) REFERENCES feedback(id_feedback);
-
+    ADD FOREIGN KEY (id_user) REFERENCES User(id_user);
 ALTER TABLE `feedback`
     ADD FOREIGN KEY (id_user) REFERENCES User(id_user),
     ADD FOREIGN KEY (id_post) REFERENCES Post(id_post);
