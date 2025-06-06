@@ -54,7 +54,7 @@ DELIMITER ;
 CREATE TABLE `active_user` (
   `id` tinyint UNSIGNED NOT NULL,
   `user_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,7 @@ CREATE TABLE `active_user` (
 CREATE TABLE `admin` (
   `id_user` int NOT NULL,
   `id_admin` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -77,7 +77,7 @@ CREATE TABLE `feedback` (
   `id_feedback` int NOT NULL,
   `id_user` int NOT NULL,
   `id_post` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -88,12 +88,12 @@ CREATE TABLE `feedback` (
 CREATE TABLE `guru` (
   `id_user` int NOT NULL,
   `nama_lengkap` varchar(200) NOT NULL,
-  `nip` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `nip` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tgl_lahir` date DEFAULT NULL,
   `domisili` varchar(100) DEFAULT NULL,
   `telepon` varchar(20) DEFAULT NULL,
-  `status_guru` enum('Terverifikasi','Belum Terverifikasi','Ditolak','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'Belum Terverifikasi'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status_guru` enum('Terverifikasi','Belum Terverifikasi','Ditolak','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Belum Terverifikasi'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -105,7 +105,7 @@ CREATE TABLE `jawab` (
   `id_feedback` int NOT NULL,
   `id_jawab` int NOT NULL,
   `isi_jawab` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -117,7 +117,7 @@ CREATE TABLE `komen` (
   `id_feedback` int NOT NULL,
   `id_komen` int NOT NULL,
   `isi_komen` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -129,10 +129,10 @@ CREATE TABLE `post` (
   `id_post` int NOT NULL,
   `id_user` int NOT NULL,
   `file_foto` varchar(255) DEFAULT NULL,
-  `isi_post` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `status` enum('Publik','Privat','Hapus') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Publik',
+  `isi_post` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('Publik','Privat','Hapus') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Publik',
   `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -143,11 +143,11 @@ CREATE TABLE `post` (
 CREATE TABLE `report` (
   `id_feedback` int NOT NULL,
   `id_report` int NOT NULL,
-  `jenis_report` enum('Akun','Post') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `status_report` enum('Belum Diproses','Sedang Diproses','Selesai Diproses','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Belum Diproses',
-  `isi_report` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `report_kategori` enum('spam','ucapan kebencian','pelecehan dan perundungan','aktivitas yang berbahaya','konten dewasa (konsensual)','eksploitasi dan pelecehan seksual (keselamatan anak)','eksploitasi dan pelecehan seksual (dewasa)','plagiarisme','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `jenis_report` enum('Akun','Post') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status_report` enum('Belum Diproses','Sedang Diproses','Selesai Diproses','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Belum Diproses',
+  `isi_report` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `report_kategori` enum('spam','ucapan kebencian','pelecehan dan perundungan','aktivitas yang berbahaya','konten dewasa (konsensual)','eksploitasi dan pelecehan seksual (keselamatan anak)','eksploitasi dan pelecehan seksual (dewasa)','plagiarisme','lainnya') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -159,7 +159,7 @@ CREATE TABLE `repost` (
   `id_feedback` int NOT NULL,
   `id_repost` int NOT NULL,
   `isi_repost` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -172,7 +172,7 @@ CREATE TABLE `riwayat` (
   `id_user` int NOT NULL,
   `point` int DEFAULT NULL,
   `date` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -184,7 +184,7 @@ CREATE TABLE `save` (
   `id_save` int NOT NULL,
   `id_user` int NOT NULL,
   `id_post` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -195,11 +195,11 @@ CREATE TABLE `save` (
 CREATE TABLE `siswa` (
   `id_user` int NOT NULL,
   `nama_lengkap` varchar(200) NOT NULL,
-  `nisn` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `kelas` enum('1','2','3','4','5','6','7','8','9','10','11','12') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `tingkat` enum('SD','SMP','SMA') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `nisn` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `kelas` enum('1','2','3','4','5','6','7','8','9','10','11','12') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tingkat` enum('SD','SMP','SMA') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `tanggal_lahir` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -213,11 +213,11 @@ CREATE TABLE `user` (
   `password` varbinary(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `foto_profil` text,
-  `status_akun` enum('Aktif','Tidak Aktif') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'Aktif',
-  `jenis_user` enum('Admin','Guru','Siswa') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `status_akun` enum('Aktif','Tidak Aktif') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Aktif',
+  `jenis_user` enum('Admin','Guru','Siswa') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
@@ -313,7 +313,7 @@ CREATE TABLE `vote` (
   `id_vote` int NOT NULL,
   `upvote` int DEFAULT '0',
   `downvote` int DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
