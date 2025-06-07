@@ -12,9 +12,9 @@ insert into User(
 ) VALUES (
     'username_guru',
     'userbaru@gmail',
-    'password123',
+    'password123    ',
     'path_foto_profil_guru.jpg',
-    'guru', --wajib guru 
+    'guru', -- (wajib otomatis guru ) 
     'daffa wijaya',
     '2000-01-01',
     '08123456789',

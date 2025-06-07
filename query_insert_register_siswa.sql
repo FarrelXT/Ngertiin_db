@@ -16,7 +16,7 @@ INSERT INTO User (
     'username_baru', -- username
     'userbaru@mail.com', -- email
     'password123', -- password
-    'siswa', -- jenis_user (wajib siswa)
+    'siswa', -- jenis_user (wajib otomatis enum siswa)
     'path_foto_profil.jpg', -- Foto_profil(opsional)
     'User Baru', -- Nama_Lengkap
     'SMA 1', -- Nama_Sekolah
