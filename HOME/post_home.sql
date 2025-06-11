@@ -34,5 +34,4 @@ WHERE
     vpd.status_post = 'Publik'
 ORDER BY 
     vpd.tanggal_post DESC, 
-    vpd.total_upvote DESC
-LIMIT 20 OFFSET ?; -- Parameter: ganti agar tiap 20 baris post = offset +20
+    vpd.total_upvote DESC;
