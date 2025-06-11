@@ -17,13 +17,13 @@ SELECT
     CASE -- cek sudah save post
         WHEN s.id_save IS NOT NULL THEN 1 
         ELSE 0 
-    END as is_saved_by_user,
+    END as saved_by_user,
     CASE -- cek udah kasih vote
         WHEN f.id_feedback IS NOT NULL THEN 1 
         ELSE 0
         WHEN v.upvote > 0 THEN 'upvoted'
         WHEN v.downvote > 0 THEN 'downvoted'
-        ELSE 'not_voted'
+        ELSE 'NA_voted'
     END as user_vote_status
 FROM 
     view_post_detail vpd
